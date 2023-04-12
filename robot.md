@@ -27,7 +27,7 @@ Example: `GAADADADAA`
 When all commands are executed the program should report which coordinate (x,y) the robot is located at and what direction the robot is facing.
 
 At start the robot is always facing north.
-The room could have 2 shapes, square or circular.
+The room can have two shapes, either square ((0,0) is the top left position) or circular ((0,0) is at the center of the circle).
 
 ## Example 1
 
@@ -37,7 +37,7 @@ Given the instructions (in swedish) `HGHGGHGHG`, give the result: `1 3 N`
 
 ## Example 2
 
-We select a circular room with a radius of 10 ((0,0) is at the center of the circle). We give the starting position (0, 0) and to use english commands.
+We select a circular room with a radius of 10. We give the starting position (0, 0) and to use english commands.
 With the instructions `RRFLFFLRF`, gives the result: `3 1 E`
 
 ## How

@@ -1,19 +1,95 @@
-# Programming task
+# PinMeTo Robot
 
-As a part of our hiring process we would like you to solve the following programming assignment.
+A React + Vite + Tailwind application that simulates robot movement within a room based on user-inputted commands. The robot can navigate in different room shapes, accept commands in multiple languages, and visualize its path and final position.
 
-We want you to show your knowledge in Javascript and how you think about the design of the code.
+## Features
 
-• You must use Javascript, not Elm, Typescript or any other language.
+- Configure the room's shape and size.
+- Set the robot's starting position and direction.
+- Enter movement commands in English, Swedish, or French.
+- Validate and execute commands to determine the robot's final position.
+- Visualize the robot's movement path in a grid.
 
-• The solution should include a README-file (replace this one).
+## Tech Stack
 
-• If needed, edit the script build.sh to build your solution
+- **React 19** - Frontend framework
+- **Vite** - Development environment
+- **Tailwind CSS** - Styling framework
+- **ESLint** - Code linting
 
-• You do not need to think about minify-ing the code or packaging.
+## Installation
 
-• You have access to the git repository, clone it and when you are done push your code and notify your contact person at PinMeTo that you have finished the test.
+Ensure you have **Node.js >=20.0.0** installed.
 
-You will find the programming task in [robot.md](./robot.md)
+```sh
+# Clone the repository
+git clone https://github.com/PinMeTo/codetest_victor.git
+cd codetest_victor
 
-Good luck!
+# Install dependencies
+npm install
+```
+
+## Usage
+
+Start the development server:
+
+```sh
+npm run dev
+```
+
+Build for production:
+
+```sh
+npm run build
+```
+
+Preview the production build:
+
+```sh
+npm run preview
+```
+
+Lint the code:
+
+```sh
+npm run lint
+```
+
+## Project Structure
+
+```
+├── src
+│   ├── components       # Reusable UI components
+│   ├── context          # React context
+│   ├── hooks            # Custom React hooks
+│   ├── utils            # Helper functions for logic
+│   ├── App.jsx          # Main application file
+│   ├── main.jsx         # Entry point
+│   ├── index.css        # Global styles
+│
+├── public               # Static assets
+├── package.json         # Project metadata
+├── vite.config.js       # Vite configuration
+└── README.md            # This file
+```
+
+## Commands Format
+
+- **English**: `L` (left), `R` (right), `F` (forward)
+- **Swedish**: `V` (vänster/left), `H` (höger/right), `G` (gå/forward)
+- **French**: `G` (gauche/left), `D` (droite/right), `A` (avancer/forward)
+
+Example input:
+
+```
+F R F L F
+```
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues and pull requests.
+
+## License
+
+MIT License.

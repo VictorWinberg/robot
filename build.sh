@@ -2,4 +2,4 @@
 
 set -euf
 
-yarn install
+npm install

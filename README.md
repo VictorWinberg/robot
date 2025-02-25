@@ -38,6 +38,12 @@ Start the development server:
 npm run dev
 ```
 
+Run tests:
+
+```sh
+npm test
+```
+
 Build for production:
 
 ```sh
@@ -83,7 +89,7 @@ npm run lint
 Example input:
 
 ```
-F R F L F
+FRFLF
 ```
 
 ## Contributing

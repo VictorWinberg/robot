@@ -46,7 +46,7 @@ const moveForward = (state) => {
  * @param {Room} room
  * @returns {boolean}
  */
-const isValidPosition = (state, room) => {
+export const isValidPosition = (state, room) => {
   if (room.shape === 'square') {
     return (
       state.x >= 0 && state.x < room.size && state.y >= 0 && state.y < room.size

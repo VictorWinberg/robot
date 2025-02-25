@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { executeCommands, validateCommands } from './utils/robot-utils';
+import {
+  executeCommands,
+  isValidPosition,
+  validateCommands,
+} from './utils/robot-utils';
 import Grid from './components/RoomGrid';
 import { useToast } from './hooks/toast-hook';
 
@@ -14,20 +18,28 @@ const App = () => {
 
   const [endPos, setEndPos] = useState({});
   const [path, setPath] = useState([]);
+  const [warnings, setWarnings] = useState([]);
+  const [errors, setErrors] = useState({ pos: '', commands: '' });
 
   useEffect(() => {
-    if (!validateCommands(commands, language)) {
+    const newErrors = {
+      pos: !isValidPosition(startPos, room) ? 'Invalid start position' : '',
+      commands: !validateCommands(commands, language) ? 'Invalid commands' : '',
+    };
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) {
       toast({
-        title: 'Invalid Commands',
-        description: 'Please check your command syntax and try again.',
+        title: 'Invalid Configuration',
+        description: 'Please check your configuration and try again.',
       });
       return;
     }
 
-    const { end, path } = executeCommands(commands, language, startPos, room);
-
+    const { end, path, warnings } = executeCommands(commands, language, startPos, room);
     setPath(path);
     setEndPos(end);
+    setWarnings(warnings);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commands, language, startPos, room]);
 
@@ -36,8 +48,8 @@ const App = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-semibold text-primary">
-            Robot<span className='text-secondary'>Me</span>To
-            </h1>
+            Robot<span className="text-secondary">Me</span>To
+          </h1>
           <p className="mt-2 text-sm text-gray-600">
             Control your robot with simple commands
           </p>
@@ -120,6 +132,9 @@ const App = () => {
                   </div>
                 </div>
               </div>
+              {errors.pos && (
+                <p className="text-sm text-red-600 my-1">{errors.pos}</p>
+              )}
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md">
@@ -154,30 +169,51 @@ const App = () => {
                     placeholder="Enter commands..."
                     className="input"
                   />
+                  {errors.commands && (
+                    <p className="text-sm text-red-600 my-1">
+                      {errors.commands}
+                    </p>
+                  )}
+                  {warnings.length > 0 && (
+                    <p className="text-sm text-yellow-600 my-1">
+                      {warnings.join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           </form>
 
-          <div className="space-y-6">
-            <div className="block bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Final Position
-              </h2>
-              <div className="text-2xl font-semibold text-secondary">
-                {`${endPos.x} ${endPos.y} ${endPos.direction}`}
-              </div>
-            </div>
-
-            <div className="block bg-white p-6 rounded-lg shadow-md">
+          {Object.values(errors).some((error) => error) ? (
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
-                Room Visualization
+                Invalid Configuration
               </h2>
-              <div className="aspect-square">
-                <Grid room={room} start={startPos} end={endPos} path={path} />
+              <p className="text-sm text-gray-600">
+                Please check your configuration and try again.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="block bg-white p-6 rounded-lg shadow-md">
+                <h2 className="text-lg font-medium text-gray-900 mb-2">
+                  Final Position
+                </h2>
+                <div className="text-2xl font-semibold text-secondary">
+                  {`${endPos.x} ${endPos.y} ${endPos.direction}`}
+                </div>
+              </div>
+
+              <div className="block bg-white p-6 rounded-lg shadow-md">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  Room Visualization
+                </h2>
+                <div className="aspect-square">
+                  <Grid room={room} start={startPos} end={endPos} path={path} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

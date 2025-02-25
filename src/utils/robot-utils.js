@@ -71,6 +71,7 @@ export const executeCommands = (commands, language, start, room) => {
   const cmdMap = languageCommands[language];
   let state = { ...start };
   const path = [state];
+  const warnings = [];
 
   for (const cmd of commands.toUpperCase()) {
     let newState = { ...state };
@@ -82,6 +83,7 @@ export const executeCommands = (commands, language, start, room) => {
     } else if (cmd === cmdMap.forward) {
       newState = moveForward(state);
       if (!isValidPosition(newState, room)) {
+        warnings.push('Robot hit the wall');
         continue;
       }
       path.push({ x: newState.x, y: newState.y });
@@ -90,7 +92,7 @@ export const executeCommands = (commands, language, start, room) => {
     state = newState;
   }
 
-  return { end: state, path };
+  return { end: state, path, warnings: combineDuplicates(warnings) };
 };
 
 /**
@@ -106,4 +108,26 @@ export const validateCommands = (commands, language) => {
     .toUpperCase()
     .split('')
     .every((cmd) => validCommands.has(cmd));
+};
+
+/**
+ * Combines duplicate strings in a list and appends a count for duplicates.
+ *
+ * @param {string[]} strings
+ * @returns {string[]}
+ *
+ * @example
+ * combineDuplicates(["apple", "banana", "apple", "orange", "banana", "banana"]);
+ * // Returns: ["apple (x2)", "banana (x3)", "orange"]
+ */
+export const combineDuplicates = (strings) => {
+  const stringMap = new Map();
+
+  strings.forEach((item) => {
+    stringMap.set(item, (stringMap.get(item) || 0) + 1);
+  });
+
+  return Array.from(stringMap.entries()).map(([message, count]) =>
+    count > 1 ? `${message} (x${count})` : message
+  );
 };

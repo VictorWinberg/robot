@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 
-import { executeCommands, validateCommands } from '../utils/robot-utils';
+import {
+  combineDuplicates,
+  executeCommands,
+  validateCommands,
+} from '../utils/robot-utils';
 
 describe('Robot Utils', () => {
   const squareRoom = { shape: 'square', size: 5 };
@@ -53,5 +57,17 @@ describe('Robot Utils', () => {
     const start = { x: 2, y: 2, direction: 'N' };
     const { end } = executeCommands('GADAG', 'french', start, squareRoom);
     expect(end).toEqual({ x: 1, y: 1, direction: 'W' });
+  });
+
+  it('should give warnings for hitting walls', () => {
+    const start = { x: 0, y: 0, direction: 'N' };
+    const { warnings } = executeCommands('FFF', 'english', start, squareRoom);
+    expect(warnings).toEqual(['Robot hit the wall (x3)']);
+  });
+
+  it('should combine duplicate strings', () => {
+    const strings = ['apple', 'banana', 'apple', 'orange', 'banana', 'banana'];
+    const result = combineDuplicates(strings);
+    expect(result).toEqual(['apple (x2)', 'banana (x3)', 'orange']);
   });
 });

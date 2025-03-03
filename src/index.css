@@ -1,9 +1,11 @@
+@import '@fontsource-variable/inter';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply bg-background text-foreground font-['Inter'];
+  @apply bg-background text-foreground font-sans;
 }
 
 .input-focus {

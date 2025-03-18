@@ -1,0 +1,18 @@
+@import '@fontsource-variable/inter';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-background text-foreground font-sans;
+}
+
+.input-focus {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+}
+
+.input {
+  @apply w-full px-4 py-3 border rounded-lg bg-white input-focus;
+}
+

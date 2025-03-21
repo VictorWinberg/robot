@@ -4,6 +4,9 @@ import Browser
 import Html exposing (Html, div, form, h1, h2, input, label, option, p, select, span, text)
 import Html.Attributes exposing (class, placeholder, type_, value)
 import Html.Events exposing (onInput)
+import Utils.Language exposing (Language(..), parseLanguage)
+import Utils.Position exposing (Direction(..), Position)
+import Utils.Room exposing (Room, RoomShape(..), parseRoomShape)
 
 
 main : Program () Model Msg
@@ -14,29 +17,16 @@ main =
 type alias Model =
     { room : Room
     , startPos : Position
-    , language : String
+    , language : Language
     , commands : String
-    }
-
-
-type alias Room =
-    { shape : String
-    , size : Int
-    }
-
-
-type alias Position =
-    { x : Int
-    , y : Int
-    , direction : String
     }
 
 
 init : Model
 init =
-    { room = Room "square" 5
-    , startPos = Position 0 0 "N"
-    , language = "english"
+    { room = Room Square 5
+    , startPos = Position 0 0 N
+    , language = English
     , commands = ""
     }
 
@@ -54,7 +44,7 @@ update : Msg -> Model -> Model
 update msg ({ room, startPos } as model) =
     case msg of
         SetRoomShape shape ->
-            { model | room = { room | shape = shape } }
+            { model | room = { room | shape = Maybe.withDefault room.shape (parseRoomShape shape) } }
 
         SetRoomSize size ->
             { model | room = { room | size = Maybe.withDefault room.size (String.toInt size) } }
@@ -66,7 +56,7 @@ update msg ({ room, startPos } as model) =
             { model | startPos = { startPos | y = Maybe.withDefault startPos.y (String.toInt y) } }
 
         SetLanguage lang ->
-            { model | language = lang }
+            { model | language = Maybe.withDefault model.language (parseLanguage lang) }
 
         SetCommands cmds ->
             { model | commands = cmds }
@@ -95,7 +85,7 @@ view model =
                         , div []
                             [ label [ class "block text-sm font-medium text-gray-700 mb-1" ]
                                 [ text
-                                    (if model.room.shape == "square" then
+                                    (if model.room.shape == Square then
                                         "Room Size"
 
                                      else

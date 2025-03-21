@@ -6,6 +6,7 @@ import Html.Attributes exposing (class, placeholder, type_, value)
 import Html.Events exposing (onInput)
 import Utils.Language exposing (Language(..), parseLanguage)
 import Utils.Position exposing (Direction(..), Position)
+import Utils.Robot exposing (executeCommands)
 import Utils.Room exposing (Room, RoomShape(..), parseRoomShape)
 
 
@@ -17,6 +18,7 @@ main =
 type alias Model =
     { room : Room
     , startPos : Position
+    , endPos : Position
     , language : Language
     , commands : String
     }
@@ -26,6 +28,7 @@ init : Model
 init =
     { room = Room Square 5
     , startPos = Position 0 0 N
+    , endPos = Position 0 0 N
     , language = English
     , commands = ""
     }
@@ -41,7 +44,14 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg ({ room, startPos } as model) =
+update msg model =
+    model
+        |> updateModel msg
+        |> recomputeEndPos
+
+
+updateModel : Msg -> Model -> Model
+updateModel msg ({ room, language, startPos } as model) =
     case msg of
         SetRoomShape shape ->
             { model | room = { room | shape = Maybe.withDefault room.shape (parseRoomShape shape) } }
@@ -56,10 +66,15 @@ update msg ({ room, startPos } as model) =
             { model | startPos = { startPos | y = Maybe.withDefault startPos.y (String.toInt y) } }
 
         SetLanguage lang ->
-            { model | language = Maybe.withDefault model.language (parseLanguage lang) }
+            { model | language = Maybe.withDefault language (parseLanguage lang) }
 
         SetCommands cmds ->
             { model | commands = cmds }
+
+
+recomputeEndPos : Model -> Model
+recomputeEndPos ({ room, language, commands, startPos } as model) =
+    { model | endPos = executeCommands room language commands startPos }
 
 
 view : Model -> Html Msg
@@ -122,6 +137,10 @@ view model =
                             , input [ class "input", type_ "text", placeholder "Enter commands...", value model.commands, onInput SetCommands ] []
                             ]
                         ]
+                    ]
+                , div [ class "block bg-white p-6 rounded-lg shadow-md" ]
+                    [ h2 [ class "text-lg font-medium text-gray-900 mb-2" ] [ text "Final Position" ]
+                    , div [ class "text-2xl font-semibold text-secondary" ] [ text (Utils.Position.toString model.endPos) ]
                     ]
                 ]
             ]

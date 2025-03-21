@@ -17,36 +17,36 @@ type Direction
     | W
 
 
-turnLeft : Direction -> Direction
-turnLeft dir =
-    case dir of
+turnLeft : Position -> Position
+turnLeft state =
+    case state.direction of
         N ->
-            W
+            { state | direction = W }
 
         W ->
-            S
+            { state | direction = S }
 
         S ->
-            E
+            { state | direction = E }
 
         E ->
-            N
+            { state | direction = N }
 
 
-turnRight : Direction -> Direction
-turnRight dir =
-    case dir of
+turnRight : Position -> Position
+turnRight state =
+    case state.direction of
         N ->
-            E
+            { state | direction = E }
 
         E ->
-            S
+            { state | direction = S }
 
         S ->
-            W
+            { state | direction = W }
 
         W ->
-            N
+            { state | direction = N }
 
 
 moveForward : Position -> Position
@@ -65,8 +65,8 @@ moveForward state =
             { state | x = state.x - 1 }
 
 
-isValidPosition : Position -> Room -> Bool
-isValidPosition state room =
+isValidPosition : Room -> Position -> Bool
+isValidPosition room state =
     case room.shape of
         Square ->
             state.x >= 0 && state.x < room.size && state.y >= 0 && state.y < room.size
@@ -77,3 +77,24 @@ isValidPosition state room =
                     sqrt (toFloat (state.x * state.x + state.y * state.y))
             in
             distanceFromCenter <= toFloat room.size
+
+
+toString : Position -> String
+toString { x, y, direction } =
+    String.join " " [ String.fromInt x, String.fromInt y, directionToString direction ]
+
+
+directionToString : Direction -> String
+directionToString dir =
+    case dir of
+        N ->
+            "N"
+
+        E ->
+            "E"
+
+        S ->
+            "S"
+
+        W ->
+            "W"

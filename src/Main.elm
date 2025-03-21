@@ -18,9 +18,11 @@ main =
 type alias Model =
     { room : Room
     , startPos : Position
-    , endPos : Position
     , language : Language
     , commands : String
+    , endPos : Position
+    , path : List Position
+    , warning : List String
     }
 
 
@@ -28,9 +30,11 @@ init : Model
 init =
     { room = Room Square 5
     , startPos = Position 0 0 N
-    , endPos = Position 0 0 N
     , language = English
     , commands = ""
+    , endPos = Position 0 0 N
+    , path = [ Position 0 0 N ]
+    , warning = []
     }
 
 
@@ -74,7 +78,8 @@ updateModel msg ({ room, language, startPos } as model) =
 
 recomputeEndPos : Model -> Model
 recomputeEndPos ({ room, language, commands, startPos } as model) =
-    { model | endPos = executeCommands room language commands startPos }
+    executeCommands room language commands startPos
+        |> (\result -> { model | endPos = result.endPos, path = result.path, warning = result.warnings })
 
 
 view : Model -> Html Msg
@@ -135,6 +140,7 @@ view model =
                         , div []
                             [ label [ class "block text-sm font-medium text-gray-700 mb-1" ] [ text "Commands" ]
                             , input [ class "input", type_ "text", placeholder "Enter commands...", value model.commands, onInput SetCommands ] []
+                            , p [ class "text-sm text-yellow-600 my-1" ] [ text (String.join ", " model.warning) ]
                             ]
                         ]
                     ]

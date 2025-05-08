@@ -23,8 +23,8 @@ Ensure you have **Node.js >=20.0.0** installed.
 
 ```sh
 # Clone the repository
-git clone https://github.com/PinMeTo/codetest_victor.git
-cd codetest_victor
+git clone https://github.com/VictorWinberg/robot.git
+cd robot
 
 # Install dependencies
 npm install

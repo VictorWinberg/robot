@@ -1,4 +1,4 @@
-# PinMeTo Robot
+# Robot
 
 An Elm + Vite + Tailwind application that simulates robot movement within a room based on user-inputted commands. The robot can navigate in different room shapes, accept commands in multiple languages, and visualize its path and final position.
 
